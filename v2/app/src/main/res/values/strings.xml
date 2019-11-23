@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">omdbapiconsume</string>
+    <string name="clear">Clear</string>
+    <string name="search">Search</string>
+    <string name="type_a_movie_to_search">Type a movie to search</string>
+    <string name="omdb_api">OMDB API</string>
+</resources>
