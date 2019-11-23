@@ -28,12 +28,12 @@ public class AdapterMovie extends RecyclerView.Adapter<AdapterMovie.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
-        viewHolder.bind(omdb.getSearch().get(position), omdb.getTotalResults());
+        viewHolder.bind(omdb.getSearch().get(position));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return omdb.getSearch().size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -42,7 +42,6 @@ public class AdapterMovie extends RecyclerView.Adapter<AdapterMovie.ViewHolder> 
         TextView tvYear;
         TextView tvType;
         TextView tvImdbId;
-        TextView tvTotal;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -50,26 +49,18 @@ public class AdapterMovie extends RecyclerView.Adapter<AdapterMovie.ViewHolder> 
             findItemsById(itemView);
         }
 
-        public void bind(Movie movie, Integer total) {
+        public void bind(Movie movie) {
             if (movie == null) {
                 return;
             }
 
-//            Picasso.get().load(movie.getPosterURL()).into(ivMovie);
+            Picasso.get().load(movie.getPosterURL())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .into(ivMovie);
             tvTitle.setText(movie.getTitle());
             tvYear.setText(movie.getYear());
             tvType.setText(movie.getType().name());
             tvImdbId.setText(movie.getImdbID());
-            tvTotal.setText(getFormattedResults(total));
-        }
-
-        @SuppressLint("DefaultLocale")
-        private String getFormattedResults(Integer total) {
-            if (total == null) {
-                total = 0;
-            }
-
-            return String.format("Total Results: %d", total);
         }
 
         private void findItemsById(@NonNull View itemView) {
@@ -78,7 +69,6 @@ public class AdapterMovie extends RecyclerView.Adapter<AdapterMovie.ViewHolder> 
             tvYear = itemView.findViewById(R.id.tv_year);
             tvType = itemView.findViewById(R.id.tv_type);
             tvImdbId = itemView.findViewById(R.id.tv_imdbId);
-            tvTotal = itemView.findViewById(R.id.tv_total);
         }
     }
 }

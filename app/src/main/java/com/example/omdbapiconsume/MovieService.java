@@ -1,11 +1,17 @@
 package com.example.omdbapiconsume;
 
+import android.annotation.SuppressLint;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.util.Objects.requireNonNull;
 
 public class MovieService extends BaseRetrofitConfig {
     private MovieApiService movieApiService;
@@ -15,7 +21,7 @@ public class MovieService extends BaseRetrofitConfig {
         movieApiService = retrofit.create(MovieApiService.class);
     }
 
-    public void searchMoviesByText(String text, final RecyclerView rvMovies, final LinearLayoutManager linearLayoutManager) {
+    public void searchMoviesByText(String text, final RecyclerView rvMovies, final TextView tvTotal, final LinearLayoutManager linearLayoutManager) {
         Call<OmdbMovieResponse> omdbApi = movieApiService.getOmdbApi(apiKey, text);
 
         omdbApi.enqueue(new Callback<OmdbMovieResponse>() {
@@ -27,6 +33,7 @@ public class MovieService extends BaseRetrofitConfig {
 
                 rvMovies.setLayoutManager(linearLayoutManager);
                 rvMovies.setAdapter(adapterMovie);
+                tvTotal.setText(getFormattedResults(requireNonNull(omdbMovieResponse).getTotalResults()));
             }
 
             @Override
@@ -38,5 +45,15 @@ public class MovieService extends BaseRetrofitConfig {
                 }
             }
         });
+    }
+
+
+    @SuppressLint("DefaultLocale")
+    private String getFormattedResults(Integer total) {
+        if (total == null) {
+            total = 0;
+        }
+
+        return String.format("Total Results: %d", total);
     }
 }
